@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import userService from "../../api/userService";
 
@@ -21,7 +20,7 @@ const Register = () => {
       await userService.register(formData);
       alert("Usuário registrado com sucesso!");
     } catch (error) {
-      alert("Erro ao registrar usuário: " + error.message);
+      alert("Erro ao registrar usuário: " + (error.response?.data?.message || error.message));
     }
   };
 
@@ -29,15 +28,24 @@ const Register = () => {
     <form onSubmit={handleSubmit}>
       <h1>Registrar</h1>
       {Object.keys(formData).map((field) => (
-        <input
-          key={field}
-          type="text"
-          placeholder={field}
-          name={field}
-          value={formData[field]}
-          onChange={handleChange}
-          required
-        />
+        <div key={field}>
+          <input
+            type={
+              field === "email"
+                ? "email"
+                : field === "senha"
+                ? "password"
+                : field === "dataNascimento"
+                ? "date"
+                : "text"
+            }
+            placeholder={field}
+            name={field}
+            value={formData[field]}
+            onChange={handleChange}
+            required
+          />
+        </div>
       ))}
       <button type="submit">Registrar</button>
     </form>
